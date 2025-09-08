@@ -366,7 +366,7 @@
 
         // --- API Call ---
         async function getGrammarCorrection(text, language) {
-            // const apiKey ="AIzaSyAKrUzsPx9eHdz51GlQjGPuOZnPoxh8JXc";
+           
             const apiKey = CONFIG.GEMINI_API_KEY;
              
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
