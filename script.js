@@ -541,6 +541,6 @@
         function scrollToBottom() {
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
-
+        
         // Expose function to global scope for select element
         window.handleLanguageChange = handleLanguageChange;
