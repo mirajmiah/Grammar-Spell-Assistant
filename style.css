@@ -384,3 +384,53 @@ body {
         font-size: 16px; /* Prevents iOS zoom */
     }
 }
+
+
+
+
+#history-panel-mobile {
+  z-index: 60;
+  width: 280px;
+  max-width: 80vw;
+  overflow-y: auto;
+}
+
+.chat-input-container {
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+#history-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 55;
+  display: none;
+}
+
+body.sidebar-open #history-overlay {
+  display: block;
+}
+
+body.sidebar-open .chat-input-container {
+  transform: translateX(0);
+  z-index: 1;
+}
+
+#clear-history-btn, #clear-history-btn-mobile {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 1024px) {
+  body.sidebar-open main {
+    pointer-events: none;
+  }
+  body:not(.sidebar-open) main {
+    pointer-events: all;
+  }
+  body.sidebar-open {
+    overflow: hidden;
+  }
+}
