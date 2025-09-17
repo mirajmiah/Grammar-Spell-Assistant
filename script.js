@@ -43,9 +43,6 @@
             }
         });
         themeToggle.addEventListener('click', toggleTheme);
-        historyBtnMobile.addEventListener('click', openHistoryPanel);
-        closeHistoryBtn.addEventListener('click', closeHistoryPanel);
-        historyOverlay.addEventListener('click', closeHistoryPanel);
         clearHistoryBtn.addEventListener('click', clearHistory);
         clearHistoryBtnMobile.addEventListener('click', clearHistory);
         languageSelect.addEventListener('change', (e) => {
@@ -67,16 +64,6 @@
         }
 
         // --- History Management ---
-        function openHistoryPanel() {
-            historyPanelMobile.classList.remove('-translate-x-full');
-            historyOverlay.classList.remove('hidden');
-        }
-
-        function closeHistoryPanel() {
-            historyPanelMobile.classList.add('-translate-x-full');
-            historyOverlay.classList.add('hidden');
-        }
-
         function loadHistory() {
             searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
             renderHistory();
@@ -544,3 +531,39 @@
         
         // Expose function to global scope for select element
         window.handleLanguageChange = handleLanguageChange;
+
+
+// --- START: Replace previous history JS with this block ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Get all the elements needed
+    const historyBtn = document.getElementById('history-btn-mobile');
+    const historyPanel = document.getElementById('history-panel-mobile');
+    const historyOverlay = document.getElementById('history-overlay');
+    const closeHistoryBtn = document.getElementById('close-history-btn');
+
+    // Function to open the sidebar
+    function openHistoryPanel() {
+        historyPanel.classList.add('open');
+        historyOverlay.classList.add('open');
+        document.body.classList.add('sidebar-open'); // For showing 'Clear History'
+    }
+
+    // Function to close the sidebar
+    function closeHistoryPanel() {
+        historyPanel.classList.remove('open');
+        historyOverlay.classList.remove('open');
+        document.body.classList.remove('sidebar-open'); // For hiding 'Clear History'
+    }
+
+    // Add event listeners to the buttons
+    if (historyBtn) {
+        historyBtn.addEventListener('click', openHistoryPanel);
+    }
+    if (closeHistoryBtn) {
+        closeHistoryBtn.addEventListener('click', closeHistoryPanel);
+    }
+    if (historyOverlay) {
+        historyOverlay.addEventListener('click', closeHistoryPanel);
+    }
+});
+// --- END: Replacement block ---

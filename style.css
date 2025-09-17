@@ -388,49 +388,121 @@ body {
 
 
 
-#history-panel-mobile {
-  z-index: 60;
-  width: 280px;
-  max-width: 80vw;
-  overflow-y: auto;
-}
+/* --- Final Sidebar & Overlap Fix --- */
 
-.chat-input-container {
-  margin-bottom: 12px;
+/* 1. Main Content Wrapper */
+.flex-1.flex.flex-col {
   position: relative;
-  z-index: 1;
+  z-index: 1; /* Keep main content on the base layer */
 }
 
-#history-overlay {
+/* 2. Slide-out History Panel (Sidebar) */
+#history-panel-mobile {
   position: fixed;
-  inset: 0;
-  background-color: rgba(0,0,0,0.5);
-  z-index: 55;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 280px; /* Standard sidebar width */
+  max-width: 80vw; /* Ensure it doesn't take up the whole screen on small devices */
+  z-index: 100; /* High z-index to appear above everything */
+  transform: translateX(-100%); /* Hidden by default */
+  transition: transform 0.3s ease-in-out;
+  background-color: var(--card);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3. The "open" state for the sidebar */
+#history-panel-mobile.open {
+  transform: translateX(0); /* Slides the panel into view */
+}
+
+/* 4. Dark background overlay */
+#history-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0,0,0,0.6); /* Darker overlay */
+    z-index: 99; /* Below the sidebar but above the main content */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* 5. The "open" state for the overlay */
+#history-overlay.open {
+    display: block;
+    opacity: 1;
+}
+
+/* 6. Ensure the close button is positioned correctly */
+#history-panel-mobile .p-3 {
+    position: relative;
+}
+#close-history-btn {
+    position: absolute;
+    top: 50%;
+    right: 1rem; /* 16px */
+    transform: translateY(-50%);
+}
+
+
+
+/* --- History Sidebar & Clear Button Fix --- */
+
+/* 1. Make the sidebar a slide-out panel, hidden by default */
+aside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 50;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  display: flex !important; /* Ensures it's always a flex container */
+}
+
+/* 2. Show the sidebar when the body has the .sidebar-open class */
+body.sidebar-open aside {
+  transform: translateX(0);
+}
+
+/* 3. Hide the "Clear History" button's container by default */
+aside .mt-4.sm\:mt-6 {
   display: none;
 }
 
-body.sidebar-open #history-overlay {
+/* 4. Show "Clear History" ONLY when the sidebar is open */
+body.sidebar-open aside .mt-4.sm\:mt-6 {
   display: block;
 }
 
-body.sidebar-open .chat-input-container {
-  transform: translateX(0);
-  z-index: 1;
+/* 5. Style the overlay */
+#history-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 40;
 }
 
-#clear-history-btn, #clear-history-btn-mobile {
-  position: relative;
-  z-index: 2;
+/* 6. Show the overlay ONLY when the sidebar is open */
+body.sidebar-open #history-overlay {
+    display: block;
 }
 
-@media (max-width: 1024px) {
-  body.sidebar-open main {
-    pointer-events: none;
-  }
-  body:not(.sidebar-open) main {
-    pointer-events: all;
-  }
-  body.sidebar-open {
-    overflow: hidden;
+
+/* --- FINAL & STRONGEST FIX: Prevents answers from hiding under the input container --- */
+
+/* 1. This adds a very large, guaranteed empty space at the bottom of the message list */
+#chat-window {
+  padding-bottom: 220px !important; /* Increased padding for maximum safety */
+  box-sizing: border-box; /* Ensures padding is calculated correctly */
+}
+
+/* 2. On larger screens, the padding can be slightly less */
+@media (min-width: 768px) {
+  #chat-window {
+    padding-bottom: 140px !important;
   }
 }
+
