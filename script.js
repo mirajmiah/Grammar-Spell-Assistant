@@ -135,22 +135,22 @@
         }
 
         // Replace with this function...
-            function isNonsensicalInput(text) {
-                const greetings = [
-                    'hi','hello','hey','yo','good morning','good afternoon','good evening',
-                    'হাই','হ্যালো','নমস্কার','সালাম'
-                ];
-                if (greetings.includes(text.toLowerCase().trim())) return false;
-                if (text.trim().length < 2) return true;
-                if (/(.)\1{3,}/.test(text)) return true;
-                if (/[\u0980-\u09FF]/.test(text)) return false;
-                const vowels = (text.match(/[aeiou]/gi)||[]).length;
-                const consonants = (text.match(/[bcdfghjklmnpqrstvwxyz]/gi)||[]).length;
-                if (vowels===0 && consonants>3) return true;
-                const nonAlpha = (text.match(/[^a-z0-9\s\u0980-\u09FF]/gi)||[]).length;
-                if (nonAlpha/text.length>0.4) return true;
-                return false;
-            }
+    function isNonsensicalInput(text) {
+        const greetings = [
+            'hi','hello','hey','yo','good morning','good afternoon','good evening',
+            'হাই','হ্যালো','নমস্কার','সালাম'
+        ];
+        if (greetings.includes(text.toLowerCase().trim())) return false;
+        if (text.trim().length < 2) return true;
+        if (/(.)\1{3,}/.test(text)) return true;
+        if (/[\u0980-\u09FF]/.test(text)) return false;
+        const vowels = (text.match(/[aeiou]/gi)||[]).length;
+        const consonants = (text.match(/[bcdfghjklmnpqrstvwxyz]/gi)||[]).length;
+        if (vowels===0 && consonants>3) return true;
+        const nonAlpha = (text.match(/[^a-z0-9\s\u0980-\u09FF]/gi)||[]).length;
+        if (nonAlpha/text.length>0.4) return true;
+        return false;
+    }
 
 
         // --- Core Chat Logic ---
