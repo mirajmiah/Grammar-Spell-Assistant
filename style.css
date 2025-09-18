@@ -506,3 +506,10 @@ body.sidebar-open #history-overlay {
   }
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600&display=swap');
+
+#chat-input, .chat-input-container input,
+.message-content, #chat-window {
+    font-family: 'Noto Sans Bengali', 'SolaimanLipi', 'Inter', sans-serif !important;
+    line-height: 1.6;
+}
