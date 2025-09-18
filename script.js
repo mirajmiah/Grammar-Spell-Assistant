@@ -134,13 +134,16 @@
             sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         }
 
-        // --- Input Validation ---
         function isNonsensicalInput(text) {
-            // Check for very short inputs
-            if (text.trim().length < 3) return true;
+            // FIRST: Check if it's a valid greeting - don't flag these as nonsensical
+            const greetings = ['hi', 'hello', 'hey', 'yo', 'good morning', 'good afternoon', 'good evening'];
+            if (greetings.includes(text.toLowerCase().trim())) return false;
+            
+            // Check for very short inputs (but allow greetings above)
+            if (text.trim().length < 2) return true;
             
             // Check for repeated characters or patterns
-            const repeatedPattern = /(.)\1{3,}/; // Matches 4 or more repeated characters
+            const repeatedPattern = /(.)\\1{3,}/; // Matches 4 or more repeated characters
             if (repeatedPattern.test(text)) return true;
             
             // Check for lack of vowels (for English-like inputs)
@@ -151,11 +154,12 @@
             if (vowelCount === 0 && consonantCount > 3) return true;
             
             // Check for high ratio of non-alphanumeric characters
-            const nonAlphaNumericCount = (text.match(/[^a-z0-9\s]/gi) || []).length;
+            const nonAlphaNumericCount = (text.match(/[^a-z0-9\\s]/gi) || []).length;
             if (nonAlphaNumericCount / text.length > 0.4) return true;
             
             return false;
         }
+
 
         // --- Core Chat Logic ---
         async function handleSendMessage() {
