@@ -134,35 +134,23 @@
             sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         }
 
-        function isNonsensicalInput(text) {
-            // Allow greetings in English & Bengali
-            const greetings = [
-                'hi','hello','hey','yo','good morning','good afternoon','good evening',
-                'হাই','হ্যালো','নমস্কার','সালাম'
-            ];
-            if (greetings.includes(text.toLowerCase().trim())) return false;
-
-            // Reject very short inputs (except greetings)
-            if (text.trim().length < 2) return true;
-
-            // Reject repeated characters
-            if (/(.)\1{3,}/.test(text)) return true;
-
-            // Allow all Bengali text through
-            if (/[\u0980-\u09FF]/.test(text)) return false;
-
-            // English vowel/consonant check
-            const vowels = (text.match(/[aeiou]/gi)||[]).length;
-            const consonants = (text.match(/[bcdfghjklmnpqrstvwxyz]/gi)||[]).length;
-            if (vowels===0 && consonants>3) return true;
-
-            // Reject high ratio of non-alphanumeric chars
-            const nonAlpha = (text.match(/[^a-z0-9\s\u0980-\u09FF]/gi)||[]).length;
-            if (nonAlpha/text.length>0.4) return true;
-
-            return false;
-        }
-
+        // Replace with this function...
+            function isNonsensicalInput(text) {
+                const greetings = [
+                    'hi','hello','hey','yo','good morning','good afternoon','good evening',
+                    'হাই','হ্যালো','নমস্কার','সালাম'
+                ];
+                if (greetings.includes(text.toLowerCase().trim())) return false;
+                if (text.trim().length < 2) return true;
+                if (/(.)\1{3,}/.test(text)) return true;
+                if (/[\u0980-\u09FF]/.test(text)) return false;
+                const vowels = (text.match(/[aeiou]/gi)||[]).length;
+                const consonants = (text.match(/[bcdfghjklmnpqrstvwxyz]/gi)||[]).length;
+                if (vowels===0 && consonants>3) return true;
+                const nonAlpha = (text.match(/[^a-z0-9\s\u0980-\u09FF]/gi)||[]).length;
+                if (nonAlpha/text.length>0.4) return true;
+                return false;
+            }
 
 
         // --- Core Chat Logic ---
@@ -369,32 +357,32 @@
             const targetLanguage = languageMap[language] || 'English';
             const escapedText = escapeHtml(text);
 
-            const isBengali = /[\u0980-\u09FF]/.test(text);
-const prompt = isBengali
-  ? `Analyze the Bengali text "${escapeHtml(text)}" for grammar, spelling, and style. Respond in JSON with fields:
-    {
-      "original":"…",
-      "corrected":"…",
-      "translation":"English translation",
-      "errors":[{"wrong":"…","correct":"…","explanation":"…"}],
-      "rewrites":{"formal":"…","informal":"…","polite":"…"},
-      "prediction":"Next sentence in Bengali"
-    }
-   If no errors, "errors" must be an empty array. Do not include any text or markdown outside of the JSON object.
-   For verb tense errors, provide detailed explanations about why the tense is incorrect and how to use the correct tense.
-  `
-  : `Analyze the following text for grammar, spelling, and style. Respond in JSON with fields:
-    {
-      "original":"…",
-      "corrected":"…",
-      "translation":"${targetLanguage} translation",
-      "errors":[{"wrong":"…","correct":"…","explanation":"…"}],
-      "rewrites":{"formal":"…","informal":"…","polite":"…"},
-      "prediction":"Next sentence"
-    }
-   If no errors, "errors" must be an empty array. Do not include any text or markdown outside of the JSON object.
-   For verb tense errors, provide detailed explanations about why the tense is incorrect and how to use the correct tense.
-  `;
+            const prompt = `
+                Analyze the user's text: "${escapedText}".
+                Provide a response as a single, valid JSON object. All explanations MUST be in ${targetLanguage}.
+                The JSON must have this exact structure:
+                {
+                    "original": "The original text.",
+                    "corrected": "The corrected text.",
+                    "translation": "The full meaning in ${targetLanguage}",
+                    "errors": [
+                        {
+                            "wrong": "incorrect phrase",
+                            "correct": "correction",
+                            "explanation": "Detailed explanation including verb tense rules if applicable.",
+                            "tenseExplanation": "Explanation of why the tense is incorrect and how to use it correctly"
+                        }
+                    ],
+                    "rewrites": {
+                        "formal": "Formal rewrite.",
+                        "informal": "Informal rewrite.",
+                        "polite": "Polite rewrite."
+                    },
+                    "prediction": "A likely next sentence."
+                }
+                If no errors, "errors" must be an empty array. Do not include any text or markdown outside of the JSON object.
+                For verb tense errors, provide detailed explanations about why the tense is incorrect and how to use the correct tense.
+            `;
 
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
